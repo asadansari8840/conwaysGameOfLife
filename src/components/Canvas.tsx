@@ -33,7 +33,7 @@ const Canvas: React.FC<CanvasProps> = ({grid, cols, rows, cellSize, onClick}) =>
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
                     const cell = grid[r][c];
-                    context.fillStyle = cell === 1 ? 'black' : 'rgba(255,255,255,0.8)';
+                    context.fillStyle = cell === 1 ? 'black' : 'rgba(255,255,255,0.8)'; //black means Alive cell , else dead !!
                     context.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
                     context.strokeRect(c * cellSize, r * cellSize, cellSize, cellSize);
                 }

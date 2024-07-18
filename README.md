@@ -1,30 +1,72 @@
-# React + TypeScript + Vite
+# Conway's Game of Life
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This React application implements Conway's Game of Life, developed by Asad Ansari for the Rock8Careers assignment. The application is deployed on Vercel.
 
-Currently, two official plugins are available:
+## Project URL
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   **Live App**: [https://conways-game-of-life-beryl.vercel.app/](https://conways-game-of-life-beryl.vercel.app/)
+-   **GitHub Repository**: [https://github.com/asadansari8840/conwaysGameOfLife](https://github.com/asadansari8840/conwaysGameOfLife)
 
-## Expanding the ESLint configuration
+## Folder Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- src
+- │
+- ├── assets
+- │   └── (contains static assets like images, fonts, etc.)
+- │
+- ├── components
+- │   └── (contains all the files related to the game components)
+- │
+- ├── utils
+- │   └── gameOfLife.tsx (contains the logic for Conway's Game of Life)
+- │
+- ├── App.tsx
+- ├── index.css
+- └── main.tsx
 
-- Configure the top-level `parserOptions` property like this:
+Local Development Setup
+Clone the Repository `git clone https://github.com/asadansari8840/conwaysGameOfLife.git`
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+Navigate to the Project Directory
+
+`cd conwaysGameOfLife`
+Install Dependencies
+
+Ensure you have Node.js and npm installed. Then run:
+
+
+`npm install`
+Start the Development Server
+
+
+`npm run dev`
+This will start the development server, and you can view the app in your browser at http://localhost:5173 by default.
+
+Building the Project
+To build the project for production:
+
+
+`npm run build`
+Linting
+To run linting and ensure code quality:
+
+
+`npm run lint`
+Pushing a Branch to Main
+Create a New Branch
+
+
+`git checkout -b branchname`
+Make Your Changes and Commit
+
+
+`git add .`
+`git commit -m "Add a descriptive commit message"`
+Push Your Branch
+
+
+`git push origin main`
+Create a Pull Request
+
+Go to the GitHub repository, switch to your branch, and create a pull request to merge your changes into the main branch.
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

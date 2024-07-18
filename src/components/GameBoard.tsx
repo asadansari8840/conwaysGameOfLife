@@ -1,12 +1,13 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
-import {createEmptyGrid, getNextState, Grid} from '../utils/gameOfLife';
+import {createEmptyGrid, getNextState} from '../utils/gameOfLife';
+import type {Grid} from '../utils/gameOfLife';
 import Canvas from './Canvas';
 import ControlsFooter from './ControlsFooter';
 import SliderInput from './SliderInput';
 import {Gauge, Grid3X3Icon} from 'lucide-react';
 
 const GameBoard: React.FC = () => {
-    const [cellSize, setCellSize] = useState<number>(20);
+    const [cellSize, setCellSize] = useState<number>(20); //Default size of each box is 20x20px
     const [speedValue, setSpeedValue] = useState<number>(100);
     const [grid, setGrid] = useState<Grid>([]);
     const [gridSize, setGridSize] = useState<{cols: number; rows: number}>({cols: 0, rows: 0});
@@ -18,7 +19,7 @@ const GameBoard: React.FC = () => {
         setGrid((prevGrid) => {
             const newGrid = getNextState(prevGrid);
             if (JSON.stringify(newGrid) === JSON.stringify(prevGrid)) {
-                setIsRunning(false); // Pause if the grid is stable
+                setIsRunning(false); // Pause if the grid is stable to stop unneccessary function calls !
                 return prevGrid;
             }
             return newGrid;
@@ -28,6 +29,7 @@ const GameBoard: React.FC = () => {
     useEffect(() => {
         const updateCanvasSize = () => {
             if (containerRef.current) {
+                //getting the available width and height of the container in which canvas is present !
                 const containerWidth = containerRef.current.clientWidth;
                 const containerHeight = containerRef.current.clientHeight;
 
