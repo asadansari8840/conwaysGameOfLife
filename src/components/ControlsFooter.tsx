@@ -1,4 +1,4 @@
-import {Play, Pause, Shuffle, RotateCw} from 'lucide-react';
+import {Play, Pause, Shuffle, RotateCw, WandSparkles} from 'lucide-react';
 import React from 'react';
 import Button from './Button';
 
@@ -7,9 +7,12 @@ interface ControlsProps {
     onStartStop: () => void;
     onClear: () => void;
     onRandomize: () => void;
+    onGenerate: () => void;
+    inputValue: string;
+    onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ControlsFooter: React.FC<ControlsProps> = ({isRunning, onStartStop, onClear, onRandomize}) => {
+const ControlsFooter: React.FC<ControlsProps> = ({isRunning, onStartStop, onClear, onRandomize, onGenerate, inputValue, onInputChange}) => {
     return (
         <div className="h-[120px] flex gap-4 items-center justify-center bg-gray-600">
             <Button onClick={onStartStop}>
@@ -26,6 +29,17 @@ const ControlsFooter: React.FC<ControlsProps> = ({isRunning, onStartStop, onClea
             <Button onClick={onRandomize}>
                 <Shuffle className="mr-3" />
                 Randomize
+            </Button>
+            <input
+                name="name"
+                value={inputValue}
+                onChange={onInputChange}
+                className="px-2 py-2 rounded-xl text-white bg-black placeholder:text-white"
+                placeholder="Enter something here.."
+            />
+            <Button onClick={onGenerate}>
+                <WandSparkles className="mr-3" />
+                Generate
             </Button>
         </div>
     );

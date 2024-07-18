@@ -8,11 +8,6 @@ interface CanvasProps {
     onClick: (row: number, col: number) => void;
 }
 
-/**
- * Canvas component which dyamically changes its size based on screen and size choose by user
- * @param param0
- * @returns
- */
 const Canvas: React.FC<CanvasProps> = ({grid, cols, rows, cellSize, onClick}) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -33,7 +28,7 @@ const Canvas: React.FC<CanvasProps> = ({grid, cols, rows, cellSize, onClick}) =>
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
                     const cell = grid[r][c];
-                    context.fillStyle = cell === 1 ? 'black' : 'rgba(255,255,255,0.8)'; //black means Alive cell , else dead !!
+                    context.fillStyle = cell === 1 ? 'black' : 'rgba(255,255,255,0.8)';
                     context.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
                     context.strokeRect(c * cellSize, r * cellSize, cellSize, cellSize);
                 }

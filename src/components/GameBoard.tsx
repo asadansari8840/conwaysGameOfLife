@@ -1,35 +1,29 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
-import {createEmptyGrid, getNextState} from '../utils/gameOfLife';
+import {createEmptyGrid, getNextState} from '../utils/gameOfLife'; // Import getNextState
 import type {Grid} from '../utils/gameOfLife';
 import Canvas from './Canvas';
 import ControlsFooter from './ControlsFooter';
 import SliderInput from './SliderInput';
 import {Gauge, Grid3X3Icon} from 'lucide-react';
+import {drawLetterOnGrid, letterMap} from '../utils/letterMap'; // Import the letter drawing function
 
 const GameBoard: React.FC = () => {
-    const [cellSize, setCellSize] = useState<number>(20); //Default size of each box is 20x20px
+    const [cellSize, setCellSize] = useState<number>(20);
+    const [inputValue, setInputValue] = useState('');
     const [speedValue, setSpeedValue] = useState<number>(100);
-    const [grid, setGrid] = useState<Grid>([]);
+    const [grid, setGrid] = useState<Grid>(createEmptyGrid(20, 20));
     const [gridSize, setGridSize] = useState<{cols: number; rows: number}>({cols: 0, rows: 0});
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [intervalId, setIntervalId] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const updateGrid = useCallback(() => {
-        setGrid((prevGrid) => {
-            const newGrid = getNextState(prevGrid);
-            if (JSON.stringify(newGrid) === JSON.stringify(prevGrid)) {
-                setIsRunning(false); // Pause if the grid is stable to stop unneccessary function calls !
-                return prevGrid;
-            }
-            return newGrid;
-        });
+        setGrid((prevGrid) => getNextState(prevGrid));
     }, []);
 
     useEffect(() => {
         const updateCanvasSize = () => {
             if (containerRef.current) {
-                //getting the available width and height of the container in which canvas is present !
                 const containerWidth = containerRef.current.clientWidth;
                 const containerHeight = containerRef.current.clientHeight;
 
@@ -37,20 +31,7 @@ const GameBoard: React.FC = () => {
                 const newRows = Math.floor(containerHeight / cellSize);
 
                 setGridSize({cols: newCols, rows: newRows});
-
-                // Create a new empty grid based on the updated size
-                setGrid((prevGrid) => {
-                    const newGrid = createEmptyGrid(newRows, newCols);
-
-                    // Transfer the state of the previous grid to the new grid
-                    for (let r = 0; r < Math.min(prevGrid.length, newRows); r++) {
-                        for (let c = 0; c < Math.min(prevGrid[r].length, newCols); c++) {
-                            newGrid[r][c] = prevGrid[r][c];
-                        }
-                    }
-
-                    return newGrid;
-                });
+                setGrid(createEmptyGrid(newRows, newCols));
             }
         };
 
@@ -93,7 +74,6 @@ const GameBoard: React.FC = () => {
 
     const randomizeBoard = useCallback(() => {
         setGrid(createEmptyGrid(gridSize.rows, gridSize.cols).map((row) => row.map(() => (Math.random() > 0.7 ? 1 : 0))));
-        setIsRunning(true);
     }, [gridSize.rows, gridSize.cols]);
 
     const toggleRunning = useCallback(() => {
@@ -101,13 +81,63 @@ const GameBoard: React.FC = () => {
     }, []);
 
     const handleSpeedChange = useCallback((value: number) => {
-        setSpeedValue(1100 - value); // Reverse slider value for speed
+        setSpeedValue(1100 - value);
     }, []);
 
     const handleCellSizeChange = useCallback((size: number) => {
         setCellSize(size);
     }, []);
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const generateTextGrid = () => {
+        const newGrid = createEmptyGrid(gridSize.rows, gridSize.cols);
+        const text = inputValue.toUpperCase(); // Convert text to uppercase for consistency
+
+        const charWidth = 5; // Width of each character in grid units
+        const charHeight = 7; // Height of each character in grid units
+        const lineSpacing = 1; // Space between lines
+        const charSpacing = 1; // Space between characters
+
+        let startX = 0; // Starting X position for the first character
+        let startY = 0; // Starting Y position for the first character
+        const maxWidth = gridSize.cols; // Maximum width of the grid
+        const maxHeight = gridSize.rows; // Maximum height of the grid
+
+        text.split('').forEach((char) => {
+            if (char in letterMap) {
+                const letterGrid = drawLetterOnGrid(char, charWidth, charHeight);
+
+                if (startX + letterGrid[0].length > maxWidth) {
+                    startX = 0;
+                    startY += charHeight + lineSpacing;
+
+                    if (startY + charHeight > maxHeight) {
+                        return;
+                    }
+                }
+
+                for (let r = 0; r < letterGrid.length; r++) {
+                    for (let c = 0; c < letterGrid[r].length; c++) {
+                        if (letterGrid[r][c] === 1) {
+                            const gridRow = startY + r;
+                            const gridCol = startX + c;
+                            if (gridRow < maxHeight && gridCol < maxWidth) {
+                                newGrid[gridRow][gridCol] = 1;
+                            }
+                        }
+                    }
+                }
+
+                // Move to the next character position
+                startX += letterGrid[0].length + charSpacing;
+            }
+        });
+
+        setGrid(newGrid);
+    };
     return (
         <>
             <div
@@ -122,7 +152,6 @@ const GameBoard: React.FC = () => {
                     onClick={handleCellClick}
                 />
                 <div className="absolute right-5 flex flex-col gap-5 bg-gray-400 rounded-xl border border-black p-3 bottom-10">
-                    {/* For execution speed of game */}
                     <SliderInput
                         icon={<Gauge />}
                         min={100}
@@ -131,7 +160,6 @@ const GameBoard: React.FC = () => {
                         handleSliderChange={handleSpeedChange}
                         sliderValue={1000 - speedValue}
                     />
-                    {/* For grid size adjustment */}
                     <SliderInput
                         min={5}
                         max={200}
@@ -147,6 +175,9 @@ const GameBoard: React.FC = () => {
                 onStartStop={toggleRunning}
                 onClear={clearBoard}
                 onRandomize={randomizeBoard}
+                onGenerate={generateTextGrid}
+                inputValue={inputValue}
+                onInputChange={handleInputChange}
             />
         </>
     );
