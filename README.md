@@ -56,15 +56,15 @@ This React application implements Conway's Game of Life, developed by Asad Ansar
 ### Pushing a Branch to Main
 - Create a New Branch
 
-`git checkout -b branchname` \n
+`git checkout -b branchname`
 
 - Make Your Changes and Commit
 
 `git add .`
-`git commit -m "Add a descriptive commit message"` \n
+`git commit -m "Add a descriptive commit message"`
 - Push Your Branch
 
-`git push origin main` \n
+`git push origin main`
 - Create a Pull Request
 
 - Go to the GitHub repository, switch to your branch, and create a pull request to merge your changes into the main branch.
